@@ -11,23 +11,27 @@ import {useAsyncStorage} from '@react-native-async-storage/async-storage';
 
 export function Home() {
   const [data, setData] = useState<CardProps[]>([]);
-  const {getItem} = useAsyncStorage("@savepass:passwords");
+  const {getItem, setItem} = useAsyncStorage("@savepass:passwords");
 
-  async function handleFetch() {
+  async function handleFetchData() {
     const response = await getItem();
     const data = response ? JSON.parse(response) : [];
     setData(data);
   }
 
 useFocusEffect(useCallback(() => {
-    handleFetch();
+    handleFetchData();
   }, []));
   
-  // async function handleRemove(id: string) {
-  //   const response = await getItem();
-  //   const previusData = response ? JSON.parse(response) : [];
+  async function handleRemove(id: string) {
+    const response = await getItem();
+    const previusData = response ? JSON.parse(response) : [];
 
-  // }
+    const data = previusData.filter((item: CardProps) => item.id !== id);
+
+    setItem(JSON.stringify(data));
+    setData(data);
+  }
 
   return (
     <View style={styles.container}>
@@ -51,7 +55,7 @@ useFocusEffect(useCallback(() => {
         renderItem={({ item }) =>
           <Card
             data={item}
-            onPress={() => handleRemove()}
+            onPress={() => handleRemove(item.id)}
           />
         }
       />
