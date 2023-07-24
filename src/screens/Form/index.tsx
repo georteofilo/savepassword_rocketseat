@@ -25,7 +25,7 @@ export function Form() {
         id,
         name,
         user,
-        password,
+        password
       }
 
       await AsyncStorage.setItem("@savepass:passwords", JSON.stringify(newData));

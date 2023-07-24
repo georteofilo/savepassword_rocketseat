@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 
 import { Card, CardProps } from '../../components/Card';
@@ -7,10 +7,22 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { styles } from './styles';
 import { Button } from '../../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Home() {
   const [data, setData] = useState<CardProps[]>([]);
 
+  async function handleFetch() {
+    const response = await AsyncStorage.getItem("@savepass:passwords");
+    const data = response ? JSON.parse(response) : {};
+    setData([data]);
+
+  }
+
+  useEffect(() => {
+    handleFetch();
+  }, [])
+  
   async function handleRemove() {
 
   }
