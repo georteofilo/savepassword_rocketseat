@@ -7,25 +7,27 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { styles } from './styles';
 import { Button } from '../../components/Button';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
 
 export function Home() {
   const [data, setData] = useState<CardProps[]>([]);
+  const {getItem} = useAsyncStorage("@savepass:passwords");
 
   async function handleFetch() {
-    const response = await AsyncStorage.getItem("@savepass:passwords");
-    const data = response ? JSON.parse(response) : {};
-    setData([data]);
-
+    const response = await getItem();
+    const data = response ? JSON.parse(response) : [];
+    setData(data);
   }
 
-  useEffect(() => {
+useFocusEffect(useCallback(() => {
     handleFetch();
-  }, [])
+  }, []));
   
-  async function handleRemove() {
+  // async function handleRemove(id: string) {
+  //   const response = await getItem();
+  //   const previusData = response ? JSON.parse(response) : [];
 
-  }
+  // }
 
   return (
     <View style={styles.container}>
